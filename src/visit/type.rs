@@ -35,6 +35,13 @@ impl IdentVisitor for syn::TypeBareFn {
     }
 }
 
+impl IdentVisitor for syn::BareFnArg {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { name, ty, .. } = self;
+        name.map(swap_tuple).visit().chain(ty.visit())
+    }
+}
+
 impl IdentVisitor for syn::TypeGroup {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { elem, .. } = self;
