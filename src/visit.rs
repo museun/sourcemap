@@ -90,10 +90,6 @@ mod fields_unnamed;
 mod fn_arg;
 mod ident;
 mod impl_item;
-mod impl_item_const;
-mod impl_item_macro;
-mod impl_item_method;
-mod impl_item_type;
 mod item;
 mod item_const;
 mod item_enum;
@@ -126,8 +122,7 @@ mod variant;
 pub use {
     bare_fn_arg::*, block::*, expr::*, expr_assign::*, expr_block::*, expr_call::*, expr_field::*,
     expr_method_call::*, expr_type::*, field::*, field_pat::*, fields::*, fields_named::*,
-    fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, impl_item_const::*, impl_item_macro::*,
-    impl_item_method::*, impl_item_type::*, item::*, item_const::*, item_enum::*,
+    fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, item::*, item_const::*, item_enum::*,
     item_extern_crate::*, item_fn::*, item_impl::*, item_macro::*, item_macro2::*, item_mod::*,
     item_static::*, item_struct::*, item_trait::*, item_trait_alias::*, item_type::*,
     item_union::*, local::*, member::*, pat::*, path::*, q_self::*, r#macro::*, r#trait::*,
