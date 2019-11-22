@@ -1,3 +1,5 @@
+use std::path::{Path, PathBuf};
+
 #[derive(Debug)]
 pub enum Error {
     Io(std::io::Error),
@@ -22,11 +24,10 @@ impl std::error::Error for Error {
     }
 }
 
-use std::path::{Path, PathBuf};
-
 #[derive(Debug, Clone)]
 pub struct Blob<'a> {
     pub object: &'a str,
+    pub base: &'a Path,
     pub path: &'a Path,
 }
 
@@ -34,7 +35,7 @@ impl<'a> From<&Blob<'a>> for BlobOwned {
     fn from(blob: &Blob<'a>) -> Self {
         Self {
             object: blob.object.to_owned(),
-            path: blob.path.to_owned(),
+            path: crate::canonicalize(blob.base, blob.path),
         }
     }
 }
@@ -45,9 +46,12 @@ pub struct BlobOwned {
     pub path: PathBuf,
 }
 
-pub fn git_tree(path: impl AsRef<Path>) -> Result<Vec<u8>, Error> {
-    let output = std::process::Command::new("git")
-        .current_dir(path)
+pub fn git_tree<'a>(
+    path: &'a Path,
+    buf: &'a mut Vec<u8>,
+) -> Result<impl Iterator<Item = Blob<'a>> + 'a, Error> {
+    let mut output = std::process::Command::new("git")
+        .current_dir(&path)
         .args(&["ls-tree", "-zr", "HEAD"])
         .output()
         .map_err(Error::Io)?;
@@ -56,19 +60,21 @@ pub fn git_tree(path: impl AsRef<Path>) -> Result<Vec<u8>, Error> {
         return Err(Error::GitFailed);
     }
 
-    Ok(output.stdout)
-}
+    std::mem::swap(buf, &mut output.stdout);
 
-pub fn parse_blobs(data: &[u8]) -> impl Iterator<Item = Blob> {
-    data.split(|&b| b == 0)
+    let iter = buf
+        .split(|&b| b == 0)
         .flat_map(|data| std::str::from_utf8(data))
         .filter_map(|line| line.split(' ').nth(2).map(|l| l.split('\t')))
-        .filter_map(|mut parts| {
+        .filter_map(move |mut parts| {
             Blob {
                 object: parts.next()?,
+                base: path,
                 path: Path::new(parts.next()?),
             }
             .into()
         })
-        .filter(|blob| blob.path.extension().and_then(|s| s.to_str()) == Some("rs"))
+        .filter(|blob| blob.path.extension().and_then(|s| s.to_str()) == Some("rs"));
+
+    Ok(iter)
 }
