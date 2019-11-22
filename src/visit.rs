@@ -91,20 +91,6 @@ mod fn_arg;
 mod ident;
 mod impl_item;
 mod item;
-mod item_const;
-mod item_enum;
-mod item_extern_crate;
-mod item_fn;
-mod item_impl;
-mod item_macro;
-mod item_macro2;
-mod item_mod;
-mod item_static;
-mod item_struct;
-mod item_trait;
-mod item_trait_alias;
-mod item_type;
-mod item_union;
 mod local;
 mod r#macro;
 mod member;
@@ -122,9 +108,7 @@ mod variant;
 pub use {
     bare_fn_arg::*, block::*, expr::*, expr_assign::*, expr_block::*, expr_call::*, expr_field::*,
     expr_method_call::*, expr_type::*, field::*, field_pat::*, fields::*, fields_named::*,
-    fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, item::*, item_const::*, item_enum::*,
-    item_extern_crate::*, item_fn::*, item_impl::*, item_macro::*, item_macro2::*, item_mod::*,
-    item_static::*, item_struct::*, item_trait::*, item_trait_alias::*, item_type::*,
-    item_union::*, local::*, member::*, pat::*, path::*, q_self::*, r#macro::*, r#trait::*,
-    r#type::*, return_type::*, signature::*, stmt::*, variant::*,
+    fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, item::*, local::*, member::*, pat::*,
+    path::*, q_self::*, r#macro::*, r#trait::*, r#type::*, return_type::*, signature::*, stmt::*,
+    variant::*,
 };
