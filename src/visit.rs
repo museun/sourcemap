@@ -88,7 +88,6 @@ mod member;
 mod pat;
 mod path;
 mod q_self;
-mod return_type;
 mod signature;
 mod stmt;
 mod r#trait;
@@ -97,5 +96,5 @@ mod r#type;
 pub use {
     block::*, expr::*, field::*, field_pat::*, fields::*, fields_named::*, fields_unnamed::*,
     ident::*, impl_item::*, item::*, member::*, pat::*, path::*, q_self::*, r#macro::*, r#trait::*,
-    r#type::*, return_type::*, signature::*, stmt::*,
+    r#type::*, signature::*, stmt::*,
 };
