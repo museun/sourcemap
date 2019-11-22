@@ -80,7 +80,6 @@ mod field_pat;
 mod fields;
 mod fields_named;
 mod fields_unnamed;
-mod fn_arg;
 mod ident;
 mod impl_item;
 mod item;
@@ -97,6 +96,6 @@ mod r#type;
 
 pub use {
     block::*, expr::*, field::*, field_pat::*, fields::*, fields_named::*, fields_unnamed::*,
-    fn_arg::*, ident::*, impl_item::*, item::*, member::*, pat::*, path::*, q_self::*, r#macro::*,
-    r#trait::*, r#type::*, return_type::*, signature::*, stmt::*,
+    ident::*, impl_item::*, item::*, member::*, pat::*, path::*, q_self::*, r#macro::*, r#trait::*,
+    r#type::*, return_type::*, signature::*, stmt::*,
 };

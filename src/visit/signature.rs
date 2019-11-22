@@ -11,3 +11,12 @@ impl IdentVisitor for syn::Signature {
         ident.visit().chain(inputs.visit()).chain(output.visit())
     }
 }
+
+impl IdentVisitor for syn::FnArg {
+    fn visit(self) -> Vec<syn::Ident> {
+        match self {
+            syn::FnArg::Receiver(_) => Default::default(),
+            syn::FnArg::Typed(ty) => ty.visit(),
+        }
+    }
+}
