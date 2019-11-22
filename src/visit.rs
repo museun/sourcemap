@@ -129,26 +129,9 @@ mod q_self;
 mod return_type;
 mod signature;
 mod stmt;
-mod trait_bound;
-mod trait_item;
-mod trait_item_const;
-mod trait_item_macro;
-mod trait_item_method;
-mod trait_item_type;
+mod r#trait;
 mod r#type;
-mod type_array;
-mod type_bare_fn;
-mod type_group;
-mod type_impl_trait;
-mod type_macro;
-mod type_param_bound;
-mod type_paren;
-mod type_path;
-mod type_ptr;
-mod type_reference;
-mod type_slice;
-mod type_trait_object;
-mod type_tuple;
+
 mod variant;
 
 pub use {
@@ -160,9 +143,6 @@ pub use {
     item_static::*, item_struct::*, item_trait::*, item_trait_alias::*, item_type::*,
     item_union::*, local::*, member::*, pat::*, pat_box::*, pat_ident::*, pat_lit::*, pat_or::*,
     pat_range::*, pat_reference::*, pat_slice::*, pat_struct::*, pat_tuple::*, pat_tuple_struct::*,
-    pat_type::*, path::*, q_self::*, r#macro::*, r#type::*, return_type::*, signature::*, stmt::*,
-    trait_bound::*, trait_item::*, trait_item_const::*, trait_item_macro::*, trait_item_method::*,
-    trait_item_type::*, type_array::*, type_bare_fn::*, type_group::*, type_impl_trait::*,
-    type_macro::*, type_param_bound::*, type_paren::*, type_path::*, type_ptr::*,
-    type_reference::*, type_slice::*, type_trait_object::*, type_tuple::*, variant::*,
+    pat_type::*, path::*, q_self::*, r#macro::*, r#trait::*, r#type::*, return_type::*,
+    signature::*, stmt::*, variant::*,
 };
