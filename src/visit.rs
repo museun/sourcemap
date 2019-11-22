@@ -101,12 +101,10 @@ mod signature;
 mod stmt;
 mod r#trait;
 mod r#type;
-mod variant;
 
 pub use {
     bare_fn_arg::*, block::*, expr::*, expr_assign::*, expr_block::*, expr_call::*, expr_field::*,
     expr_method_call::*, expr_type::*, field::*, field_pat::*, fields::*, fields_named::*,
     fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, item::*, member::*, pat::*, path::*,
     q_self::*, r#macro::*, r#trait::*, r#type::*, return_type::*, signature::*, stmt::*,
-    variant::*,
 };

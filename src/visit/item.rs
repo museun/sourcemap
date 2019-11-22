@@ -29,12 +29,14 @@ impl IdentVisitor for syn::ItemUnion {
         ident.visit().chain(fields.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemConst {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, expr, .. } = self;
         ident.visit().chain(expr.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemEnum {
     fn visit(self) -> Vec<syn::Ident> {
         let Self {
@@ -43,6 +45,22 @@ impl IdentVisitor for syn::ItemEnum {
         ident.visit().chain(variants.visit())
     }
 }
+
+impl IdentVisitor for syn::Variant {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self {
+            ident,
+            fields,
+            discriminant,
+            ..
+        } = self;
+        ident
+            .visit()
+            .chain(fields.visit())
+            .chain(discriminant.visit())
+    }
+}
+
 impl IdentVisitor for syn::ItemExternCrate {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, rename, .. } = self;
@@ -56,6 +74,7 @@ impl IdentVisitor for syn::ItemFn {
         sig.visit().chain(block.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemImpl {
     fn visit(self) -> Vec<syn::Ident> {
         let Self {
@@ -71,6 +90,7 @@ impl IdentVisitor for syn::ItemImpl {
             .chain(items.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemMacro {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, mac, .. } = self;
@@ -84,12 +104,14 @@ impl IdentVisitor for syn::ItemMacro2 {
         ident.visit()
     }
 }
+
 impl IdentVisitor for syn::ItemMod {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, content, .. } = self;
         ident.visit().chain(content.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemStatic {
     fn visit(self) -> Vec<syn::Ident> {
         let Self {
@@ -98,12 +120,14 @@ impl IdentVisitor for syn::ItemStatic {
         ident.visit().chain(ty.visit()).chain(expr.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemStruct {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, fields, .. } = self;
         ident.visit().chain(fields.visit())
     }
 }
+
 impl IdentVisitor for syn::ItemTraitAlias {
     fn visit(self) -> Vec<syn::Ident> {
         let Self { ident, bounds, .. } = self;
