@@ -10,3 +10,10 @@ impl IdentVisitor for syn::Stmt {
         }
     }
 }
+
+impl IdentVisitor for syn::Local {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { pat, init, .. } = self;
+        pat.visit().chain(init.visit())
+    }
+}
