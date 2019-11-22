@@ -19,3 +19,80 @@ impl IdentVisitor for syn::Pat {
         }
     }
 }
+
+impl IdentVisitor for syn::PatBox {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { pat, .. } = self;
+        pat.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatType {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { pat, .. } = self;
+        pat.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatIdent {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { ident, subpat, .. } = self;
+        ident.visit().chain(subpat.visit())
+    }
+}
+
+impl IdentVisitor for syn::PatLit {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { expr, .. } = self;
+        expr.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatOr {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { cases, .. } = self;
+        cases.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatRange {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { lo, hi, .. } = self;
+        lo.visit().chain(hi.visit())
+    }
+}
+
+impl IdentVisitor for syn::PatReference {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { pat, .. } = self;
+        pat.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatSlice {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { elems, .. } = self;
+        elems.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatStruct {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { fields, .. } = self;
+        fields.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatTupleStruct {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { pat, .. } = self;
+        pat.visit()
+    }
+}
+
+impl IdentVisitor for syn::PatTuple {
+    fn visit(self) -> Vec<syn::Ident> {
+        let Self { elems, .. } = self;
+        elems.visit()
+    }
+}

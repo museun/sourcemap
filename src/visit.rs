@@ -113,17 +113,6 @@ mod local;
 mod r#macro;
 mod member;
 mod pat;
-mod pat_box;
-mod pat_ident;
-mod pat_lit;
-mod pat_or;
-mod pat_range;
-mod pat_reference;
-mod pat_slice;
-mod pat_struct;
-mod pat_tuple;
-mod pat_tuple_struct;
-mod pat_type;
 mod path;
 mod q_self;
 mod return_type;
@@ -141,8 +130,6 @@ pub use {
     impl_item_method::*, impl_item_type::*, item::*, item_const::*, item_enum::*,
     item_extern_crate::*, item_fn::*, item_impl::*, item_macro::*, item_macro2::*, item_mod::*,
     item_static::*, item_struct::*, item_trait::*, item_trait_alias::*, item_type::*,
-    item_union::*, local::*, member::*, pat::*, pat_box::*, pat_ident::*, pat_lit::*, pat_or::*,
-    pat_range::*, pat_reference::*, pat_slice::*, pat_struct::*, pat_tuple::*, pat_tuple_struct::*,
-    pat_type::*, path::*, q_self::*, r#macro::*, r#trait::*, r#type::*, return_type::*,
-    signature::*, stmt::*, variant::*,
+    item_union::*, local::*, member::*, pat::*, path::*, q_self::*, r#macro::*, r#trait::*,
+    r#type::*, return_type::*, signature::*, stmt::*, variant::*,
 };
