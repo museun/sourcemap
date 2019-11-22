@@ -75,12 +75,6 @@ pub(self) fn swap_tuple<T, E>((left, right): (T, E)) -> (E, T) {
 
 mod block;
 mod expr;
-mod expr_assign;
-mod expr_block;
-mod expr_call;
-mod expr_field;
-mod expr_method_call;
-mod expr_type;
 mod field;
 mod field_pat;
 mod fields;
@@ -102,8 +96,7 @@ mod r#trait;
 mod r#type;
 
 pub use {
-    block::*, expr::*, expr_assign::*, expr_block::*, expr_call::*, expr_field::*,
-    expr_method_call::*, expr_type::*, field::*, field_pat::*, fields::*, fields_named::*,
-    fields_unnamed::*, fn_arg::*, ident::*, impl_item::*, item::*, member::*, pat::*, path::*,
-    q_self::*, r#macro::*, r#trait::*, r#type::*, return_type::*, signature::*, stmt::*,
+    block::*, expr::*, field::*, field_pat::*, fields::*, fields_named::*, fields_unnamed::*,
+    fn_arg::*, ident::*, impl_item::*, item::*, member::*, pat::*, path::*, q_self::*, r#macro::*,
+    r#trait::*, r#type::*, return_type::*, signature::*, stmt::*,
 };
