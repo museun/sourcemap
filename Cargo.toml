@@ -7,4 +7,5 @@ edition = "2018"
 [dependencies]
 syn = { version = "1.0.8", features = ["full", "extra-traits"] }
 proc-macro2 = { version = "1.0.6", features = ["span-locations", "nightly"] }
+pico-args = "0.3.0"
 

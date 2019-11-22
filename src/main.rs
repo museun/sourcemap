@@ -1,101 +1,43 @@
+#![allow(dead_code)]
 #![feature(proc_macro_span)]
-use std::collections::HashMap;
-use std::io::Write;
-use std::path::Path;
 
+mod args;
 mod blob;
+
+mod annotate;
 
 mod visit;
 use visit::IdentVisitor;
 
-#[derive(Default)]
-struct Annotations {
-    map: HashMap<String, ()>,
+fn print_header() {
+    println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
 }
 
-impl Annotations {
-    // fn insert(&mut self, ast: ()) {
-    //     self.map.insert(ast.blob.object.to_string(), ast);
-    // }
+// TODO don't expose this, have Args return an Error that main can use with this
+pub fn print_error_and_exit(messages: &[&dyn std::fmt::Display]) -> ! {
+    print_header();
 
-    fn write_json<W: Write>(&self, _w: W) -> std::io::Result<()> {
-        unimplemented!()
+    println!("error:");
+    for message in messages {
+        println!("  {}", message);
     }
+    std::process::exit(1)
 }
 
-enum Annotation {
-    Link(Link),
-    Markdown(Markdown),
-}
-
-#[derive(Debug, Clone)]
-struct Link {
-    lineno: usize,
-    colno: usize, // start
-    len: usize,   // end
-    to: String,   // TODO this shouldn't be a string yet
-    title: Option<String>,
-    color: Option<String>,
-}
-
-impl From<Span> for Link {
-    fn from(span: Span) -> Self {
-        Self {
-            lineno: span.line_start,
-            colno: span.column_start,
-            len: span.column_end - span.column_start,
-            to: "".into(),
-            title: None,
-            color: None,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-struct Markdown {
-    lineno: usize,
-    title: String,
-    content: String,
-}
-
-#[derive(Debug)]
-struct Span {
-    line_start: usize,
-    line_end: usize,
-    column_start: usize,
-    column_end: usize,
-}
-
-impl std::fmt::Display for Span {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}:{}..{}",
-            self.line_start,
-            self.column_start,
-            self.column_end - self.column_start
-        )
-    }
-}
-
-impl From<proc_macro2::Span> for Span {
-    fn from(span: proc_macro2::Span) -> Self {
-        let proc_macro2::LineColumn {
-            line: line_start,
-            column: column_start,
-        } = span.start();
-        let proc_macro2::LineColumn {
-            line: line_end,
-            column: column_end,
-        } = span.end();
-
-        Self {
-            line_start,
-            column_start,
-            line_end,
-            column_end,
-        }
-    }
+fn print_help_and_exit() -> ! {
+    print_header();
+    println!("usage:");
+    println!("  sourcemap -i bad_files.txt -d my_repo");
+    println!("flags:");
+    println!("  -i, --ignore <file>");
+    println!("    creates an ignore set from the LF separated lines in <file>");
+    println!("  -d, --directory <dir>");
+    println!("    directory to walk for rust files (using git ls-tree)");
+    println!("  -f, --file <file>");
+    println!("    parse just this file");
+    println!("  -h, --help");
+    println!("    print this message");
+    std::process::exit(0)
 }
 
 fn scry(source: impl AsRef<str>) -> Result<Vec<syn::Ident>, syn::Error> {
@@ -103,40 +45,37 @@ fn scry(source: impl AsRef<str>) -> Result<Vec<syn::Ident>, syn::Error> {
 }
 
 fn main() {
-    let mut args = std::env::args();
-    let file = match args.nth(1) {
-        Some(file) => file,
-        None => {
-            eprintln!("error: provide a directory");
-            std::process::exit(1)
+    let args = args::Args::parse_and_validate();
+
+    if args.help {
+        print_help_and_exit()
+    }
+
+    if let Some(ignored) = args.ignored.as_ref() {
+        if ignored.1.is_empty() {
+            print_error_and_exit(&[&"ignore file produced no entries"])
         }
+    }
+
+    match (args.directory, args.file) {
+        (Some(dir), None) => {
+            if !dir.is_dir() {
+                print_error_and_exit(&[&format!("'{}' is not a directory", dir.display())])
+            }
+            println!("parse dir");
+            // do the normal git tree / parse each file
+        }
+        (None, Some(file)) => {
+            if !file.is_dir() {
+                print_error_and_exit(&[&format!("'{}' is not a file", file.display())])
+            }
+            println!("parse file");
+            // parse just one file
+        }
+        (None, None) => print_help_and_exit(),
+        _ => print_error_and_exit(&[
+            &"--directory and --file were provided",
+            &"both cannot be used together",
+        ]),
     };
-
-    // TODO I need to find the 'crate' root (e.g. main.rs or lib.rs)
-    // probably should see how cargo or rust-analyzer loads workspaces
-    // to resolve this
-
-    let base = Path::new(&file);
-    if !base.is_dir() {
-        println!("> {}", base.display());
-        let source = std::fs::read_to_string(base).unwrap();
-
-        for ident in scry(&source).into_iter().flatten() {
-            println!("{} -> {}", ident, Span::from(ident.span()))
-        }
-        return;
-    }
-
-    let data = blob::git_tree(&file).unwrap();
-    for blob in blob::parse_blobs(&data) {
-        let name = base.join(blob.path);
-        let file = std::fs::read_to_string(&name).expect("file must be readable");
-
-        println!("{} @ {}", blob.object, blob.path.display());
-        match scry(&file) {
-            Ok(items) => println!("idents: {}", items.len()),
-            Err(err) => println!("could not parse: {}", err),
-        };
-        println!()
-    }
 }
